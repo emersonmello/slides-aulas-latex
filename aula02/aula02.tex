@@ -1,0 +1,71 @@
+% 2019 Emerson Ribeiro de Mello - IFSC - Campus São José, SC
+
+% \documentclass[handout]{beamer} % Se deseja gerar PDF sem slides extras para animações
+\documentclass{beamer}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english,brazil]{babel}
+
+\usepackage[T1]{fontenc}
+% No Linux é necessário instalar o pacote: texlive-fonts-extras para usar a fonte Roboto
+% \usepackage[sfdefault]{roboto}
+
+% Tema IFSC Cyan
+\usepackage{../0-ifscyan-modelo/beamerthemeifscyan}
+\pgfdeclareimage[width=\paperwidth]{footer}{../0-ifscyan-modelo/figs/rodape.png}
+\pgfdeclareimage[width=.25\paperwidth]{ifsclogo}{../0-ifscyan-modelo/figs/ifsclogo.png}
+
+
+
+% -------------------------------------------------%
+%              Título 
+% -------------------------------------------------%
+\title{Minha segunda aula}
+\subtitle{Aula 02}
+\author{Prof. Emerson Ribeiro de Mello}
+\titlegraphic{\pgfuseimage{ifsclogo}}
+\institute{
+\href{mello@ifsc.edu.br}{mello@ifsc.edu.br}
+}
+\date{26/09/2019}
+% -------------------------------------------------%
+
+
+\begin{document}
+% -------------------------------------------------%
+% Slide com o título
+% -------------------------------------------------%
+\setbeamertemplate{footline}{} \begin{frame}[t]\maketitle\end{frame}
+
+\setbeamertemplate{footline}{\pgfuseimage{footer}\usebeamercolor[fg]{framenumber}
+\pgftext[at=\pgfpoint{-35pt}{5pt},center,bottom]{\insertframenumber/\inserttotalframenumber}
+}
+
+
+% -------------------------------------------------%
+% Inicio do documento
+% -------------------------------------------------%
+
+
+\begin{frame}[wide]{Um slide simples na segunda aula}
+\begin{itemize}
+    \item Um simples slide
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{}
+\vspace{2cm}
+    \begin{center}
+        \huge Obrigado!
+    \end{center}
+    \vspace{2cm}
+    \begin{flushright}
+    Emerson Mello \\ \url{mello@ifsc.edu.br}
+    \end{flushright}
+\end{frame}
+
+
+
+\end{document}
