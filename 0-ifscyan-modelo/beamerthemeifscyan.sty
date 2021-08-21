@@ -2,15 +2,38 @@
 % This theme is based on BeamerThemeFocus - https://github.com/elauksap/focus-beamertheme
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{beamerthemeifscyan}[2020/08/24 v2.0 - IFSCyan Beamer theme]
+\ProvidesPackage{beamerthemeifscyan}[2021/07/16 v2.1 - IFSCyan Beamer theme]
 
-\mode<presentation>
+% -------------------------------------------------%
+% Pacotes
+% -------------------------------------------------%
+\RequirePackage[T1]{fontenc}
+\RequirePackage[english,brazil]{babel}
+\RequirePackage[sfdefault]{roboto}
+\RequirePackage{xcolor}
+\RequirePackage{xstring}
+\RequirePackage{kvoptions}
 
-% ----------------------------------------------------------------------------%
-%                          Pacotes
-% ----------------------------------------------------------------------------%
+\DeclareStringOption[0D4F4D]{textbgcolor}[0D4F4D]
+\DeclareStringOption[ffffff]{textfgcolor}[ffffff]
+\DeclareStringOption[eef1ec]{slidebgcolor}[eef1ec]%{RGB}{238,241,236}
+\DeclareStringOption[000000]{authorfgcolor}[000000]
+\DeclareStringOption[000000]{slidefgcolor}[000000]
+\DeclareStringOption[7 pt]{itemsep}[7 pt]
+\ProcessKeyvalOptions*
+
 \RequirePackage{pgf}
+\RequirePackage{tikz}
+\usetikzlibrary{calc,math,positioning}
 \RequirePackage{graphicx}
+\RequirePackage{etoolbox} % \BeforeBeginEnvironment
+\RequirePackage{appendixnumberbeamer} % Don't number appendix frames.
+\RequirePackage{fontawesome}
+\RequirePackage[skins]{tcolorbox}
+\RequirePackage{ccicons}
+\RequirePackage{caption}
+% Para diminuir o tamanho da fonte do caption da figura
+\captionsetup[figure]{font=tiny}
 \RequirePackage{listings,color,upquote}
 \RequirePackage{booktabs}
 \RequirePackage{array}
@@ -19,178 +42,208 @@
 \RequirePackage{soul}
 \urlstyle{sf}
 
-\RequirePackage[T1]{fontenc}
-\usepackage[sfdefault]{roboto}
-\RequirePackage{tikz}
-\usetikzlibrary{calc,math,positioning}
-\RequirePackage{etoolbox} % \BeforeBeginEnvironment
-\RequirePackage{appendixnumberbeamer} % Don't number appendix frames.
-\RequirePackage{fontawesome}
-\RequirePackage[skins]{tcolorbox}
-% -------------------------------------------------%
-% Configurações para o PDF que será gerado
-% -------------------------------------------------%
-\definecolor{midnightblue}{rgb}{0.1, 0.1, 0.44}
-\hypersetup{
-    colorlinks,
-    pdffitwindow=false,  % window fit to page when opened
-    pdfstartview={FitW}, % fits the width of the page to the window
-    linkcolor=midnightblue,  %%% cor do tableofcontents, \ref, \footnote, etc
-	citecolor=midnightblue,  %%% cor do \cite
-	urlcolor=midnightblue   %%% cor do \url e \href
+\hypersetup{pdffitwindow=false, pdfstartview={FitW},allcolors=.}
+\addtobeamertemplate{headline}{\hypersetup{linkcolor=.}}{}
+
+\RequirePackage{siunitx}
+\sisetup{
+  input-ignore={.},
+  input-decimal-markers={,},
+  output-decimal-marker = {,},
+  group-separator={.},
+  group-minimum-digits=4,
 }
 
-% ----------------------------------------------------------------------------%
-%                           CORES
-% ----------------------------------------------------------------------------%
+% Novos tipos de colunas alinhado: à direita, centralizado ou esquerda e que permita definir a largura
+\RequirePackage{ragged2e}
+\newcolumntype{R}[1]{>{\RaggedLeft\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{L}[1]{>{\RaggedRight\arraybackslash}p{#1}}
 
-\definecolor{verdeifsc}{RGB}{50,160,65}
-\definecolor{vermelhoifsc}{RGB}{200,25,30}
 
-\definecolor{coolblack}{rgb}{0.0, 0.18, 0.39}
-\definecolor{darkcerulean}{rgb}{0.03, 0.27, 0.49}
-\definecolor{darkpastelblue}{rgb}{0.47, 0.62, 0.8}
-\definecolor{indigo}{rgb}{0.0, 0.25, 0.42}
+
+% Aumentando a altura das linhas nas tabelas
+\renewcommand{\arraystretch}{1.2}
+
+
+% -------------------------------------------------%
+% Comando para licenciamento 
+% -------------------------------------------------%
+\newcommand{\licenciamentoLivre}{
+  \begin{center}
+    {\Huge \ccby}
+    \vspace*{1cm} 
+
+    Estes slides estão licenciados sob a Licença \href{https://creativecommons.org/licenses/by/4.0/deed.pt_BR}{Creative Commons ``Atribuição 4.0 Internacional''.}
+  \end{center}
+}
+
+
+
 \definecolor{azul}{HTML}{7da6cb}
 \definecolor{amarelo}{HTML}{f0b400}
-
-\definecolor{main}{RGB}{13,79,77}
-\definecolor{background}{RGB}{238,241,236}
-
-\usecolortheme[named=main]{structure}
-
-\definecolor{alert}{RGB}{180, 0, 0}
 \definecolor{example}{RGB}{0, 110, 0}
+\definecolor{midnightblue}{rgb}{0.1, 0.1, 0.44}
+
+% ---------------------------------------
+% Baloes de informacao
+% ---------------------------------------
+\newtcbox{\dest}[1][red]{on line,
+arc=0pt,outer arc=0pt,colback=#1!10!white,colframe=#1!50!black, boxsep=0pt,left=1pt,right=1pt,top=2pt,bottom=2pt, boxrule=0pt,bottomrule=1pt,toprule=1pt}
+\newtcbox{\destx}[1][red]{on line, arc=7pt,colback=#1!10!white,colframe=#1!50!black, before upper={\rule[-3pt]{0pt}{10pt}},boxrule=1pt, boxsep=0pt,left=6pt,right=6pt,top=2pt,bottom=2pt}
+
+\newtcolorbox{informacao}{left=1cm, enlarge by=1mm,enhanced,arc=0mm,boxrule=.1pt,width=.98\linewidth,colback=gray!5,colframe=gray,%
+overlay={\node[anchor=north west,outer sep=3pt] at (frame.north west) {\textcolor{azul}{{\Large \faInfoCircle}}}; }}
+
+\newtcolorbox{atencao}{left=1cm, enlarge by=1mm,enhanced,arc=0mm,boxrule=.1pt,width=.98\linewidth,colback=gray!5,colframe=gray,%
+overlay={\node[anchor=north west,outer sep=3pt] at (frame.north west) {\textcolor{azul}{{\Large \faExclamationCircle}}}; }}
+
+\newtcolorbox{cuidado}{left=1cm, enlarge by=1mm,enhanced,arc=0mm,boxrule=.1pt,width=.98\linewidth,colback=gray!5,colframe=gray,%
+overlay={\node[anchor=north west,outer sep=1pt] at (frame.north west) {\textcolor{amarelo}{{\Large \faWarning}}}; }}
+
+% Use esse comando para fazer links para sites.
+% Os links ficarão em midnightblue e dentro dos símbolos < e > 
+\newcommand{\Myhref}[3][midnightblue]{\href{#2}{\color{#1}{<#3>}}}%
 
 
-\setbeamercolor{frametitle}{fg=background, bg=main}
-\setbeamercolor{framenumber}{fg=background, bg=main}
 
-\setbeamercolor{normal text}{fg=black, bg=background}
-\setbeamercolor{alerted text}{fg=alert}
-\setbeamercolor{example text}{fg=example}
+\mode<presentation>
 
-\setbeamercolor{block title}{bg=main!80!background, fg=background}
-\setbeamercolor{block body}{bg=main!10!background, fg=main}
+% -------------------------------------------------%
+% Alterando a distância padrão dos ambientes itemize / enumerate
+% -------------------------------------------------%
 
-\setbeamercolor{block title alerted}{bg=alert, fg=background}
-\setbeamercolor{block body alerted}{bg=alert!10!background, fg=black}
+% https://tex.stackexchange.com/a/129544
+% A command to set default frame options:
+%   \defaultframeoptions{<options>}  % append some more defaults options
+%   \defaultframeoptions*{<options>} % clear past defaults, set some new
+\def\beamer@extra@frameoptions{}
+\def\beamer@extra@setframeoptions#1%
+  {\appto\beamer@extra@frameoptions{\setkeys{beamerframe}{#1}}}
+\def\defaultframeoptions{\@ifstar
+  {\def\beamer@extra@frameoptions{}\beamer@extra@setframeoptions}
+  {\beamer@extra@setframeoptions}}
+\define@key{beamerframe}{environment}%
+  {\def\beamer@frameenvironmentsubst{#1}\beamer@extra@frameoptions}
 
-\setbeamercolor{block title example}{bg=verdeifsc!80!black, fg=background}
-\setbeamercolor{block body example}{bg=verdeifsc!10!background, fg=main}
+% A new frame option for wider items
+\define@key{beamerframe}{wide}[10pt]{%
+  \def\beamer@cramped{\itemsep #1\topsep0.5pt\relax}}
+% -------------------------------------------------%
 
-\setbeamercolor{itemize item}{fg=main}
-\setbeamercolor{itemize subitem}{fg=main}
+% Definir o espaçamento padrão entre os itens nas listas
+\defaultframeoptions{wide=\beamerthemeifscyan@itemsep}
 
-\setbeamercolor{enumerate item}{fg=main!70!black}
-\setbeamercolor{enumerate subitem}{fg=main!70!black}
+% \usecolortheme{crane}
+% \usecolortheme{ifscyan}
+%-----------------------------------------------------------------------------------%
+%    Beamer Color Theme
+%-----------------------------------------------------------------------------------%
+% Color: Defines the colors used in various parts of the theme, e.g.,the color for frame titles or the textbg color
 
-\setbeamercolor{description item}{fg=main!70!black}
-\setbeamercolor{description subitem}{fg=main!70!black}
+% https://material.io/resources/color/#!/?view.left=0&view.right=0&primary.color=0d4f4d
 
-\setbeamercolor{section in toc}{fg=main}
-\setbeamercolor{subsection in toc}{fg=main}
-\setbeamercolor{section number projected}{bg=main}
-\setbeamercolor{subsection number projected}{bg=main}
+% text background color
+\definecolor{textbg}{HTML}{\beamerthemeifscyan@textbgcolor} 
+% text foreground color
+\definecolor{textfg}{HTML}{\beamerthemeifscyan@textfgcolor} 
+% slide background color
+\definecolor{slidebg}{HTML}{\beamerthemeifscyan@slidebgcolor}
+% institute, author and date foreground color
+\definecolor{authordate}{HTML}{\beamerthemeifscyan@authorfgcolor}
+% Slide text foreground color
+\definecolor{slidefgcolor}{HTML}{\beamerthemeifscyan@slidefgcolor}
 
-\setbeamercolor{bibliography item}{fg=main}
-\setbeamercolor{bibliography entry author}{fg=main!70!black}
-\setbeamercolor{bibliography entry title}{fg=main}
-\setbeamercolor{bibliography entry location}{fg=main}
-\setbeamercolor{bibliography entry note}{fg=main}
+\usecolortheme[named=textbg]{structure}
+\setbeamercolor{structure}{fg=textbg, bg=slidebg}
+\setbeamercolor{normal text}{fg=slidefgcolor,bg=slidebg}
 
-% ----------------------------------------------------------------------------%
-%  FONT
-% ----------------------------------------------------------------------------%
-\setbeamerfont{title}{size=\huge, series=\bfseries}
-\setbeamerfont{subtitle}{size=\Large, parent=structure}
-\setbeamerfont{author}{size=\Large}
+\setbeamercolor{background canvas}{parent=normal text}
+\setbeamercolor{background}{parent=background canvas}
+
+\setbeamercolor{title}{fg=textfg, bg=textbg}
+
+\setbeamercolor{author}{fg=authordate}
+\setbeamercolor{institute}{fg=authordate}
+\setbeamercolor{date}{fg=authordate}
+
+\setbeamercolor{frametitle}{fg=textfg, bg=textbg}
+\setbeamercolor{framesubtitle}{parent=frametitle}
+\setbeamercolor{framenumber}{fg=textfg, bg=textbg}
+
+\setbeamercolor{section in toc}{fg=slidefgcolor}
+\setbeamercolor{subsection in toc}{fg=slidefgcolor}
+\setbeamercolor{item projected}{fg=textfg, bg=textbg}
+
+\setbeamercolor{block title}{fg=textfg, bg=textbg!80!slidebg}
+\setbeamercolor{block body}{fg=textbg, bg=textbg!10!slidebg}
+\setbeamercolor{block title alerted}{fg=textfg, bg=vermelhoifsc}
+\setbeamercolor{block body alerted}{fg=vermelhoifsc!60!black, bg=vermelhoifsc!10!slidebg}
+\setbeamercolor{block title example}{fg=textfg, bg=verdeifsc!80!black}
+\setbeamercolor{block body example}{fg=verdeifsc!80!black, bg=verdeifsc!10!slidebg}
+
+% \setbeamercolor{bibliography item}{fg=textbg}
+% \setbeamercolor{bibliography entry author}{fg=textbg!70!black}
+% \setbeamercolor{bibliography entry title}{fg=textbg}
+% \setbeamercolor{bibliography entry location}{fg=textbg}
+% \setbeamercolor{bibliography entry note}{fg=textbg}
+
+\setbeamerfont{title}{size=\Large, series=\bfseries}
+\setbeamerfont{subtitle}{size=\large, parent=structure}
+\setbeamerfont{author}{size=\large}
 
 \setbeamerfont{institute}{size=\large}
-\setbeamerfont{date}{size=\large, shape=\scshape}
+\setbeamerfont{date}{size=\normalsize}
 
-\setbeamerfont{sectiontitle}{size=\huge, series=\bfseries}
+\setbeamerfont{sectiontitle}{size=\Large}
+\setbeamerfont{subsectiontitle}{size=\large}
 \setbeamerfont{frametitle}{size=\large}
 
 \setbeamerfont{footer}{size=\normalsize}
-
 
 \setbeamerfont{bibliography item}{size=\small, shape=\scshape}
 \setbeamerfont{bibliography entry author}{size=\small, shape=\scshape}
 \setbeamerfont{bibliography entry title}{size=\small, series=\bfseries}
 \setbeamerfont{bibliography entry location}{size=\small, shape=\normalfont}
 \setbeamerfont{bibliography entry note}{size=\small, shape=\normalfont}
-% ----------------------------------------------------------------------------%
-%  INNER
-% ----------------------------------------------------------------------------%
-\setbeamersize{text margin left=5pt,text margin right=5pt}
-\setbeamertemplate{navigation symbols}{}
+
+% \useinnertheme{ifscyan}
+%-----------------------------------------------------------------------------------%
+%    Beamer Inner Theme
+%-----------------------------------------------------------------------------------%
+% Inner: Defines the appearance of any items that make up the slides central content, e.g., lists or the title on the title page
+\useinnertheme{rectangles}
+\setbeamersize{text margin left=8pt,text margin right=8pt}
 \setbeamertemplate{headline}[text line]{}
 
-\useinnertheme{rectangles}
-
-\tikzmath{
-  \dim   = 1;
-  \canto =  (.1 * \dim) ; % .1;
-  \diametro = 1.05 * \dim; % 1.05; 
-  \dist = 1.2 * \dim; % 1.1; 
-  \lin = 6;
-  \col = 2.2;
-}
-
-\newsavebox\ifsclogobranco
-\begin{lrbox}{\ifsclogobranco}
-\scalebox{.1}{
-    \begin{tikzpicture}[
-        squarednode/.style={rectangle, fill=white, minimum size=\dim cm,rounded corners=\canto cm},
-        roundnode/.style={circle, fill=white, minimum size=\diametro cm},
-        ]
-        
-        %  Grade guia
-        % \draw[step=.2cm,gray,very thin] (-1,-1.6) grid (5.4,7);
-    
-        % 1a. linha
-        \node[roundnode=#1]   (circulo) at (\col,\lin) {};
-        \node[squarednode=#2] at (\col+\dist*1,\lin) {};
-        \node[squarednode=#2] at (\col+\dist*2,\lin) {};
-    
-        % 2a. linha
-        \node[squarednode=#2] at (\col,\lin-\dist) {};
-        \node[squarednode=#2] at (\col+\dist*1,\lin-\dist) {};
-    
-        % 3a. linha
-        \node[squarednode=#2] at (\col,\lin-\dist*2) {};
-        \node[squarednode=#2] at (\col+\dist*1,\lin-\dist*2) {};
-        \node[squarednode=#2] at (\col+\dist*2,\lin-\dist*2) {};
-    
-        % 4a. linha
-        \node[squarednode=#2] at (\col,\lin-\dist*3) {};
-        \node[squarednode=#2] at (\col+\dist*1,\lin-\dist*3) {};
-    \end{tikzpicture}
-}
-\end{lrbox}
-
-% ----------------------------------------------------------------%
-
-
-% Title page.
-\defbeamertemplate*{title page}{ifscyan}[1][]{
+% ------------------------- %
+% Title page
+% ------------------------- %
+\defbeamertemplate*{title page}{ifscyan}
+{% 
+  \vfill
     \begin{tikzpicture}[overlay, remember picture]
-        \fill[color=main] (current page.north west) rectangle ([shift = {(0, -0.45\paperheight)}] current page.north east);
-        \node [anchor=south east, text width=.95\paperwidth,align=left] (titulo) at (.96\paperwidth,.075\paperheight){\usebeamerfont{title}\usebeamercolor[fg]{frametitle}\inserttitle};
-        \node[anchor=south east, below=0em of titulo, text width=.95\paperwidth,align=left] {\usebeamerfont{subtitle}\usebeamercolor[fg]{frametitle}\insertsubtitle};
+        \usebeamercolor[bg]{title}\fill (current page.north west) rectangle ([shift = {(0, -0.45\paperheight)}] current page.north east);
+        \node [anchor=south east, text width=.95\paperwidth,align=left] (titulo) at (.96\paperwidth,.075\paperheight){\usebeamerfont{title}\usebeamercolor[fg]{title}\inserttitle};
+        \node[anchor=south east, below=0em of titulo, text width=.95\paperwidth,align=left] {\usebeamerfont{subtitle}\usebeamercolor[fg]{title}\insertsubtitle};
 
         % \node [anchor=north west] (logoifsc) at (\paperwidth-3.5cm,-.08\paperheight) {\includegraphics[height=.47\paperheight]{img/ifsclogo.pdf}};
         \node [anchor=north west] (logoifsc) at (\paperwidth-3.5cm,-.08\paperheight) {\pgfuseimage{ifsclogo}};
 
-        \node [anchor=north east, text width=.7\paperwidth,align=left, execute at begin node=\setlength{\baselineskip}{1.5em}] (autor) at (.71\paperwidth,-.095\paperheight){\usebeamerfont{author}\insertauthor};
+        \node [anchor=north east, text width=.7\paperwidth,align=left, execute at begin node=\setlength{\baselineskip}{1.5em}] (autor) at (.71\paperwidth,-.095\paperheight){\usebeamercolor[fg]{author}\usebeamerfont{author}\insertauthor};
 
-        \node [anchor=south east, below=1em of autor, text width=.7\paperwidth,align=left, execute at begin node=\setlength{\baselineskip}{1.5em}] (instituicao) {\usebeamerfont{institute}\insertinstitute};
+        \node [anchor=south east, below=1em of autor, text width=.7\paperwidth,align=left, execute at begin node=\setlength{\baselineskip}{1.5em}] (instituicao) {\usebeamercolor[fg]{institute}\usebeamerfont{institute}\insertinstitute};
 
-        \node [anchor=north east, below=1em of instituicao, node distance=2.5em, text width=.7\paperwidth,align=left] (data) {\usebeamerfont{date}{\insertdate}};
+        \node [anchor=north east, below=1em of instituicao, node distance=2.5em, text width=.7\paperwidth,align=left] (data) {\usebeamercolor[fg]{date}\usebeamerfont{date}{\insertdate}};
     \end{tikzpicture}%
     \addtocounter{framenumber}{-1}
+  \vfill%
 }
+% ------------------------- %
+
+% Empty footline.
+\defbeamertemplate{footline}{none}{}
+
 
 \AtBeginSection[]{%
 \begin{frame}[plain, noframenumbering]{}
@@ -202,17 +255,6 @@
     \begin{frame}[plain, noframenumbering]{}
         \subsectionpage
     \end{frame}%
-}
-
-\setbeamertemplate{footline}{%
-\begin{tikzpicture}[inner sep=0pt,]
-    \fill[color=main,opacity=1] (0,0) rectangle (\the\paperwidth,.45cm);
-    \fill[color=main,opacity=1] (\the\paperwidth-11,.36) circle (9pt);
-    % You can put your logo.png  HERE but you have to comment other line
-    % \node (logo) at (\the\paperwidth-11,.36) {\includegraphics[scale=.2]{img/if-branco.png}};
-    \node (logo) at (\the\paperwidth-11,.36){\usebox\ifsclogobranco};
-    \node[color=background,left of = logo, node distance=.9cm] at (\the\paperwidth-8,.22) {\insertframenumber/\inserttotalframenumber};
-\end{tikzpicture}
 }
 
 % Section page.
@@ -261,45 +303,105 @@
         \let\hyperlink\@secondoftwo\insertsubsection
     \end{minipage}
 }
-% ----------------------------------------------------------------------------%
 
-% ----------------------------------------------------------------------------%
-%  OUTER
-% ----------------------------------------------------------------------------%
+% TODO create a inverse theme
+% \defbeamertemplate{background canvas}{inverse}{%
+% \usebeamercolor{frametitle}%
+%     \begin{tikzpicture}
+%         \clip (0,0) rectangle ++(\paperwidth,\paperheight);
+%         \fill[frametitle.bg] (0,0) rectangle ++(\paperwidth,\paperheight);        
+%     \end{tikzpicture}%
+% }
+
+% \define@key{beamerframe}{inverse}[true]{%
+% \setbeamertemplate{background canvas}[inverse]%
+% \setbeamertemplate{footline}[none]%
+% \usebeamerfont{frametitle}%
+% \usebeamercolor[fg]{frametitle}%
+% }
+
+% \useoutertheme{ifscyan}
+%-----------------------------------------------------------------------------------%
+%    Beamer Outer Theme
+%-----------------------------------------------------------------------------------%
+% Outer: Defines the appearance of the chrome of the slide, e.g., the title and footer of each slide
+
+\setbeamertemplate{navigation symbols}{}
+
+% \newlength{\marginedPaperWidth}{\paperwidth - 0.2cm}
 
 
-% ----------------------------------------------------------------------------%
+% dark: #007013 % light: #69d26f
+\definecolor{verdeifsc}{RGB}{50,160,65} % HEX: #32A041
+% dark: #8f0000 % light: #ff5747
+\definecolor{vermelhoifsc}{RGB}{200,25,30} % hex: #C8191E
 
+% ------------------------- %
+% IFSC Logo
+% ------------------------- %
+\tikzmath{
+  \dim   = 1;
+  \canto =  (.1 * \dim) ; % .1;
+  \diametro = 1.05 * \dim; % 1.05; 
+  \dist = 1.2 * \dim; % 1.1; 
+  \lin = 6;
+  \col = 2.2;
+}
+\usebeamercolor{title}
+\newsavebox\ifsclogobranco
+\begin{lrbox}{\ifsclogobranco}
+\scalebox{.1}{
+    \begin{tikzpicture}[
+        squarednode/.style={rectangle, fill={title.fg}, minimum size=\dim cm,rounded corners=\canto cm},
+        roundnode/.style={circle, fill={title.fg}, minimum size=\diametro cm},
+        ]
+        
+        %  Grade guia
+        % \draw[step=.2cm,gray,very thin] (-1,-1.6) grid (5.4,7);
+    
+        % 1a. linha
+        \node[roundnode=#1]   (circulo) at (\col,\lin) {};
+        \node[squarednode=#2] at (\col+\dist*1,\lin) {};
+        \node[squarednode=#2] at (\col+\dist*2,\lin) {};
+    
+        % 2a. linha
+        \node[squarednode=#2] at (\col,\lin-\dist) {};
+        \node[squarednode=#2] at (\col+\dist*1,\lin-\dist) {};
+    
+        % 3a. linha
+        \node[squarednode=#2] at (\col,\lin-\dist*2) {};
+        \node[squarednode=#2] at (\col+\dist*1,\lin-\dist*2) {};
+        \node[squarednode=#2] at (\col+\dist*2,\lin-\dist*2) {};
+    
+        % 4a. linha
+        \node[squarednode=#2] at (\col,\lin-\dist*3) {};
+        \node[squarednode=#2] at (\col+\dist*1,\lin-\dist*3) {};
+    \end{tikzpicture}
+}
+\end{lrbox}
+% ----------------------------------------------------------------%
 
-% Criando um slide com um espaçamento maior entre os items de todas as listas de itens:
-% % https://tex.stackexchange.com/questions/16793/global-setting-of-spacing-between-items-in-itemize-environment-for-beamer
-% \makeatletter
-\define@key{beamerframe}{wide}[10pt]{%
-  \def\beamer@cramped{\itemsep #1\topsep0.5pt\relax}}  
-% \makeatother
+% ------------------------- %
+% footline
+% ------------------------- %
+\setbeamertemplate{footline}{%
+\begin{tikzpicture}[inner sep=0pt,]%
+    \usebeamercolor[bg]{title}\fill (0,0) rectangle (\the\paperwidth,.45cm);
+    \usebeamercolor[bg]{title}\fill (\the\paperwidth-11,.36) circle (9pt);
+    % You can put your logo.png  HERE but you have to comment next logo line
+    % \node (logo) at (\the\paperwidth-11,.36) {\includegraphics[scale=.2]{img/if-branco.png}};
+    \node (logo) at (\the\paperwidth-11,.36){\usebox\ifsclogobranco};
+    \ifnum\thepage>1\relax%
+    % Se quiser colocar o número de páginas no lado direito
+    % \usebeamercolor[fg]{frametitle}\node[left of = logo, node distance=.9cm] at (\the\paperwidth-8,.22) {\insertframenumber/\inserttotalframenumber};%
+    \usebeamercolor[fg]{frametitle}\node at (.5,.2) {\insertframenumber~/~\inserttotalframenumber};
+    \fi%
+\end{tikzpicture}%
+}
+% ------------------------- %
+
 
 \mode<all>
-
-% ---------------------------------------
-% Baloes de informacao
-% ---------------------------------------
-\newtcbox{\dest}[1][red]{on line,
-arc=0pt,outer arc=0pt,colback=#1!10!white,colframe=#1!50!black, boxsep=0pt,left=1pt,right=1pt,top=2pt,bottom=2pt, boxrule=0pt,bottomrule=1pt,toprule=1pt}
-\newtcbox{\destx}[1][red]{on line, arc=7pt,colback=#1!10!white,colframe=#1!50!black, before upper={\rule[-3pt]{0pt}{10pt}},boxrule=1pt, boxsep=0pt,left=6pt,right=6pt,top=2pt,bottom=2pt}
-
-\newtcolorbox{informacao}{left=1cm, enlarge by=1mm,enhanced,arc=0mm,boxrule=.1pt,width=.98\linewidth,colback=gray!5,colframe=gray,%
-overlay={\node[anchor=north west,outer sep=3pt] at (frame.north west) {\textcolor{azul}{{\huge \faInfoCircle}}}; }}
-
-\newtcolorbox{atencao}{left=1cm, enlarge by=1mm,enhanced,arc=0mm,boxrule=.1pt,width=.98\linewidth,colback=gray!5,colframe=gray,%
-overlay={\node[anchor=north west,outer sep=3pt] at (frame.north west) {\textcolor{azul}{{\huge \faExclamationCircle}}}; }}
-
-\newtcolorbox{cuidado}{left=1cm, enlarge by=1mm,enhanced,arc=0mm,boxrule=.1pt,width=.98\linewidth,colback=gray!5,colframe=gray,%
-overlay={\node[anchor=north west,outer sep=1pt] at (frame.north west) {\textcolor{amarelo}{{\huge \faWarning}}}; }}
-
-
-% Use esse comando para fazer links para sites.
-% Os links ficarão em midnightblue e dentro dos símbolos < e > 
-\newcommand{\MYhref}[3][midnightblue]{\href{#2}{\color{#1}{<#3>}}}%
 
 %-----------------------------------------------------------------------------------%
 %                          Opções para o pacote listings 
@@ -351,6 +453,21 @@ overlay={\node[anchor=north west,outer sep=1pt] at (frame.north west) {\textcolo
 % YAML
 \newcommand\YAMLcolonstyle{\color{red}\mdseries}
 
+% Protocol Buffers
+% https://github.com/aytchell/latex-listings-protobuf/blob/master/protobuf/style.sty
+\definecolor{proto_basic}{RGB}{0,0,0}             % black
+\definecolor{proto_keyword}{RGB}{0,0,255}         % blue
+\definecolor{proto_type}{RGB}{128,0,0}            % dark red
+\definecolor{proto_options}{RGB}{128,0,128}       % purple
+\definecolor{proto_comment}{RGB}{0,128,0}         % dark green
+\definecolor{proto_string}{RGB}{255,0,0}          % red
+\definecolor{proto_number}{RGB}{108,113,196}      % violet
+\definecolor{proto_ident}{RGB}{0,0,0}             % black
+\definecolor{proto_digits}{RGB}{0,0,128}          % dark blue
+\definecolor{proto_background}{RGB}{255,255,255}  % white
+
+
+
 \lstset{ %
   aboveskip=\bigskipamount,
   backgroundcolor=\color{colBack}, 
@@ -358,7 +475,6 @@ overlay={\node[anchor=north west,outer sep=1pt] at (frame.north west) {\textcolo
   keywordstyle=\color{deepblue},
   stringstyle=\color{javared},
   commentstyle=\color{javagreen},
-  morecomment=[s][\color{javadocblue}]{/**}{*/},
   breakatwhitespace=false,
   breaklines=true,        
   captionpos=n,           
@@ -382,10 +498,55 @@ overlay={\node[anchor=north west,outer sep=1pt] at (frame.north west) {\textcolo
   tabsize=2,
   title=\lstname
 }
+% https://github.com/aytchell/latex-listings-protobuf/blob/master/protobuf/lang.sty
+\lstdefinelanguage{protobuf3}{%
+    sensitive=true,%
+    morecomment=[l]{//},%
+    morecomment=[s]{/*}{*/},%
+    morestring=[b]{"},%
+    % For the keywords of Protocol Buffers
+    % see https://developers.google.com/protocol-buffers/docs/proto
+    morekeywords={enum,oneof,map,syntax,public,import,option,package,message,%
+        group,optional,required,repeated,default,reserved,extend,extensions,%
+        to,max,service,rpc,returns,true,false},%
+    % Basic types
+    % see https://developers.google.com/protocol-buffers/docs/proto#scalar
+    morekeywords=[2]{%
+        double,float,int32,int64,uint32,uint64,sint32,sint64,%
+        fixed32,fixed64,sfixed32,sfixed64,bool,string,bytes},%
+    % Options
+    % taken from 'google/protobuf/descriptor.proto'
+    morekeywords=[3]{%
+        % Generic Options
+        deprecated, uninterpreted_option,%
+        % File Options
+        java_package,java_outer_classname,java_multiple_files,%
+        java_generate_equals_and_hash,java_string_check_utf8,optimize_for,%
+        go_package,cc_generic_services,java_generic_services,%
+        py_generic_services,cc_enable_arenas,obj_class_prefix,%
+        csharp_namespace,%
+        % Message Options
+        message_set_wire_format,no_standard_descriptor_accessor,map_entry,%
+        % Field Options
+        ctype, packed,jstype,lazy,weak,%
+        % Enum Options
+        allow_alias}%
+    deletekeywords={
+      % 'group' was marked as deprecated in protobuf2; now it's disallowed
+      group,%
+      % in protobuf3 the Any type replaces extensions (from protobuf2)
+      extensions, to, extend, max,%
+      % 'required' is no longer allowed
+      required,%
+      % 'optional' is default; stating it explicitly is disallowed
+      optional,%
+      % explicit default values are no longer allowed
+      default}%
+}
 
 \lstdefinelanguage{Groovy}[]{Java}{
   keywordstyle=\color{groovyblue}\bfseries,
-  stringstyle=\color{groovygreen}\ttfamily,
+  stringstyle=\color{blue}\ttfamily,
   keywords=[3]{each, findAll, groupBy, collect, inject, eachWithIndex},
   morekeywords={def, as, in, use},
   moredelim=[is][\textcolor{darkgray}]{\%\%}{\%\%},
@@ -394,7 +555,6 @@ overlay={\node[anchor=north west,outer sep=1pt] at (frame.north west) {\textcolo
 
 \lstdefinelanguage{XSD}{
   columns=fullflexible,   
-  % basicstyle=\rmfamily,   
   basicstyle=\ttfamily\footnotesize,
   commentstyle=\ttfamily\itshape\color{javagreen},   
   morestring=[s]{"}{"},   
@@ -410,13 +570,11 @@ overlay={\node[anchor=north west,outer sep=1pt] at (frame.north west) {\textcolo
 
 \lstdefinelanguage{XML}{
   columns=fullflexible,   
-  % basicstyle=\rmfamily,   
   basicstyle=\ttfamily\footnotesize,
   commentstyle=\ttfamily\itshape\color{javagreen},   
   morestring=[b]",
   morestring=[s]{>}{<},
   morecomment=[s]{<?}{?>},
-  % morestring=[s]{"}{"},   
   morecomment=[s]{!--}{--},   
   morecomment=[s]{!DOCTYPE}{]},   
   moredelim=[s][\color{black}]{>}{<},   
@@ -470,6 +628,185 @@ overlay={\node[anchor=north west,outer sep=1pt] at (frame.north west) {\textcolo
 }
 \newcommand\ProcessThreeDashes{\llap{\color{cyan}\mdseries-{-}-}}
 
+
+\lstdefinelanguage{docker}{
+  keywords={FROM, RUN, COPY, ADD, ENTRYPOINT, CMD,  ENV, ARG, WORKDIR, EXPOSE, LABEL, USER, VOLUME, STOPSIGNAL, ONBUILD, MAINTAINER},
+  keywordstyle=\color{blue}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{\#},
+  % stringstyle=\color{red}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstdefinelanguage{docker-compose}{
+  keywords={image, environment, ports, container_name, ports, volumes, links},
+  keywordstyle=\color{blue}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{\#},
+  % stringstyle=\color{red}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+\lstdefinelanguage{docker-compose-2}{
+  keywords={version, volumes, services},
+  keywordstyle=\color{blue}\bfseries,
+  keywords=[2]{image, environment, ports, container_name, ports, links, build},
+  keywordstyle=[2]\color{olive}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{\#},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstdefinestyle{shell}{language=csh,basicstyle=\ttfamily\footnotesize}
+\lstdefinestyle{shellp}{language=csh,basicstyle=\ttfamily\scriptsize}
+\lstdefinestyle{php}{language=php,basicstyle=\ttfamily\footnotesize}
+\lstdefinestyle{phpp}{language=php,basicstyle=\ttfamily\scriptsize}
+\lstdefinestyle{ansic}{language=c,basicstyle=\ttfamily\footnotesize}
+\lstdefinestyle{ansicp}{language=c,basicstyle=\ttfamily\scriptsize}
+\lstdefinestyle{cpp}{language=C++,basicstyle=\ttfamily\footnotesize}
+\lstdefinestyle{cppp}{language=C++,basicstyle=\ttfamily\scriptsize}
+\lstdefinestyle{docker}{language=docker,basicstyle=\ttfamily\scriptsize}
+\lstdefinestyle{docker-compose}{language=docker-compose,basicstyle=\ttfamily\scriptsize}
+\lstdefinestyle{docker-compose2}{language=docker-compose2,basicstyle=\ttfamily\scriptsize}
+\lstdefinestyle{json}{language=json,basicstyle=\ttfamily\footnotesize}
+\lstdefinestyle{jsonp}{language=json,basicstyle=\ttfamily\scriptsize}
+\lstdefinestyle{java}{language=java,basicstyle=\ttfamily\footnotesize}
+\lstdefinestyle{javap}{language=java,basicstyle=\ttfamily\scriptsize}
+\lstdefinestyle{matlab}{language=matlab,basicstyle=\ttfamily\footnotesize}
+\lstdefinestyle{matlabp}{language=matlab,basicstyle=\ttfamily\scriptsize}
+\lstdefinestyle{python}{language=python,basicstyle=\ttfamily\footnotesize}
+\lstdefinestyle{pythonp}{language=python,basicstyle=\ttfamily\scriptsize}
+\lstdefinestyle{xml}{language=XML,basicstyle=\ttfamily\footnotesize}
+\lstdefinestyle{xmlp}{language=XML,basicstyle=\ttfamily\scriptsize}
+\lstdefinestyle{xsd}{language=XSD,basicstyle=\ttfamily\footnotesize}
+\lstdefinestyle{xsdp}{language=XSD,basicstyle=\ttfamily\scriptsize}
+\lstdefinestyle{sql}{language=sql,moredelim=[is][\underbar]{__}{__},basicstyle=\ttfamily\footnotesize}
+\lstdefinestyle{sqlp}{language=sql,moredelim=[is][\underbar]{__}{__},basicstyle=\ttfamily\scriptsize}
+\lstdefinestyle{groovy}{language=Groovy,basicstyle=\ttfamily\footnotesize}
+\lstdefinestyle{groovyp}{language=Groovy,basicstyle=\ttfamily\scriptsize}
+\lstdefinestyle{yaml}{language=YAML,basicstyle=\ttfamily\footnotesize}
+
+% https://github.com/aytchell/latex-listings-protobuf/blob/master/protobuf/style.sty
+\lstdefinestyle{protobuf}{
+  language=protobuf3,
+  basicstyle=\color{proto_basic}\footnotesize\ttfamily,
+	keywordstyle=[1]\color{proto_keyword},
+	keywordstyle=[2]\color{proto_type},
+	keywordstyle=[3]\color{proto_options},
+	commentstyle=\color{proto_comment},
+	stringstyle=\color{proto_string},
+  numberstyle=\color{proto_number}\tiny,
+  identifierstyle=\color{proto_ident},
+	breaklines=true,
+	showstringspaces=false,
+  tabsize=2,
+  inputencoding=utf8,
+  extendedchars=true,
+  % This 'literate' block is responsible for colouring numbers
+  % appearing in the code
+  literate={0}{{\textcolor{proto_digits}{0}}}{1}%
+           {1}{{\textcolor{proto_digits}{1}}}{1}%
+           {2}{{\textcolor{proto_digits}{2}}}{1}%
+           {3}{{\textcolor{proto_digits}{3}}}{1}%
+           {4}{{\textcolor{proto_digits}{4}}}{1}%
+           {5}{{\textcolor{proto_digits}{5}}}{1}%
+           {6}{{\textcolor{proto_digits}{6}}}{1}%
+           {7}{{\textcolor{proto_digits}{7}}}{1}%
+           {8}{{\textcolor{proto_digits}{8}}}{1}%
+           {9}{{\textcolor{proto_digits}{9}}}{1}%
+           {.0}{{\textcolor{proto_digits}{.0}}}{2}%
+           {.1}{{\textcolor{proto_digits}{.1}}}{2}%
+           {.2}{{\textcolor{proto_digits}{.2}}}{2}%
+           {.3}{{\textcolor{proto_digits}{.3}}}{2}%
+           {.4}{{\textcolor{proto_digits}{.4}}}{2}%
+           {.5}{{\textcolor{proto_digits}{.5}}}{2}%
+           {.6}{{\textcolor{proto_digits}{.6}}}{2}%
+           {.7}{{\textcolor{proto_digits}{.7}}}{2}%
+           {.8}{{\textcolor{proto_digits}{.8}}}{2}%
+           {.9}{{\textcolor{proto_digits}{.9}}}{2}%
+           % We need to add some hacks - otherwise 'listings' would
+           % colour (only) the digits in the types instead of the type
+           {int32}{{\textcolor{proto_type}{int32}}}{5}%
+           {int64}{{\textcolor{proto_type}{int64}}}{5}%
+           {uint32}{{\textcolor{proto_type}{uint32}}}{6}%
+           {uint64}{{\textcolor{proto_type}{uint64}}}{6}%
+           {sint32}{{\textcolor{proto_type}{sint32}}}{6}%
+           {sint64}{{\textcolor{proto_type}{sint64}}}{6}%
+           {fixed32}{{\textcolor{proto_type}{fixed32}}}{7}%
+           {fixed64}{{\textcolor{proto_type}{fixed64}}}{7}%
+           {sfixed32}{{\textcolor{proto_type}{sfixed32}}}{8}%
+           {sfixed64}{{\textcolor{proto_type}{sfixed64}}}{8}%
+           {java_string_check_utf8}{{%
+             \textcolor{proto_options}{java_string_check_utf8}}}{2}%
+           {\ }{{ }}{1}
+           {é}{{\'{e}}}1
+        {è}{{\`{e}}}1
+        {ê}{{\^{e}}}1
+        {ë}{{\¨{e}}}1
+        {É}{{\'{E}}}1
+        {Ê}{{\^{E}}}1
+        {û}{{\^{u}}}1
+        {ù}{{\`{u}}}1
+        {â}{{\^{a}}}1
+        {à}{{\`{a}}}1
+        {á}{{\'{a}}}1
+        {ã}{{\~{a}}}1
+        {Á}{{\'{A}}}1
+        {Â}{{\^{A}}}1
+        {Ã}{{\~{A}}}1
+        {ç}{{\c{c}}}1
+        {Ç}{{\c{C}}}1
+        {õ}{{\~{o}}}1
+        {ó}{{\'{o}}}1
+        {ú}{{\'{u}}}1
+        {Ú}{{\'{U}}}1
+        {ô}{{\^{o}}}1
+        {Õ}{{\~{O}}}1
+        {Ó}{{\'{O}}}1
+        {Ô}{{\^{O}}}1
+        {î}{{\^{i}}}1
+        {Î}{{\^{I}}}1
+        {í}{{\'{i}}}1
+        {Í}{{\~{Í}}}1
+           ,
+	prebreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\hookleftarrow}},
+	upquote=true,
+}
+
+
+
+
+\newcommand{\groovy}{\lstset{style=groovy}}
+\newcommand{\groovyp}{\lstset{style=groovyp}}
+\newcommand{\cpp}{\lstset{style=cpp}}
+\newcommand{\cppp}{\lstset{style=cppp}}
+\newcommand{\ansic}{\lstset{style=ansic}}
+\newcommand{\ansicp}{\lstset{style=ansicp}}
+\newcommand{\json}{\lstset{style=json}}
+\newcommand{\jsonp}{\lstset{style=jsonp}}
+\newcommand{\yaml}{\lstset{style=yaml}}
+\newcommand{\java}{\lstset{style=java}}
+\newcommand{\javap}{\lstset{style=javap}}
+\newcommand{\sql}{\lstset{style=sql}}
+\newcommand{\sqlp}{\lstset{style=sqlp}}
+\newcommand{\xml}{\lstset{style=xml}}
+\newcommand{\xmlp}{\lstset{style=xmlp}}
+\newcommand{\xsd}{\lstset{style=xsd}}
+\newcommand{\xsdp}{\lstset{style=xsdp}}
+\newcommand{\python}{\lstset{style=python}}
+\newcommand{\pythonp}{\lstset{style=pythonp}}
+\newcommand{\csh}{\lstset{style=shell}}
+\newcommand{\cshp}{\lstset{style=shellp}}
+\newcommand{\shell}{\lstset{style=shell}}
+\newcommand{\shellp}{\lstset{style=shellp}}
+
 % Permitindo caracteres acentuados dentro do ambiente lstlisting
 \lstset{%
         inputencoding=utf8,
@@ -506,56 +843,6 @@ overlay={\node[anchor=north west,outer sep=1pt] at (frame.north west) {\textcolo
         {Í}{{\~{Í}}}1
 }
 
-\lstdefinestyle{shell}{language=csh,basicstyle=\ttfamily\footnotesize}
-\lstdefinestyle{shellp}{language=csh,basicstyle=\ttfamily\scriptsize}
-\lstdefinestyle{php}{language=php,basicstyle=\ttfamily\footnotesize}
-\lstdefinestyle{phpp}{language=php,basicstyle=\ttfamily\scriptsize}
-\lstdefinestyle{ansic}{language=c,basicstyle=\ttfamily\footnotesize}
-\lstdefinestyle{ansicp}{language=c,basicstyle=\ttfamily\scriptsize}
-\lstdefinestyle{cpp}{language=C++,basicstyle=\ttfamily\footnotesize}
-\lstdefinestyle{cppp}{language=C++,basicstyle=\ttfamily\scriptsize}
-\lstdefinestyle{json}{language=json,basicstyle=\ttfamily\footnotesize}
-\lstdefinestyle{jsonp}{language=json,basicstyle=\ttfamily\scriptsize}
-\lstdefinestyle{java}{language=java,basicstyle=\ttfamily\footnotesize}
-\lstdefinestyle{javap}{language=java,basicstyle=\ttfamily\scriptsize}
-\lstdefinestyle{matlab}{language=matlab,basicstyle=\ttfamily\footnotesize}
-\lstdefinestyle{matlabp}{language=matlab,basicstyle=\ttfamily\scriptsize}
-\lstdefinestyle{python}{language=python,basicstyle=\ttfamily\footnotesize}
-\lstdefinestyle{pythonp}{language=python,basicstyle=\ttfamily\scriptsize}
-\lstdefinestyle{xml}{language=XML,basicstyle=\ttfamily\footnotesize}
-\lstdefinestyle{xmlp}{language=XML,basicstyle=\ttfamily\scriptsize}
-\lstdefinestyle{xsd}{language=XSD,basicstyle=\ttfamily\footnotesize}
-\lstdefinestyle{xsdp}{language=XSD,basicstyle=\ttfamily\scriptsize}
-\lstdefinestyle{sql}{language=sql,basicstyle=\ttfamily\footnotesize}
-\lstdefinestyle{sqlp}{language=sql,basicstyle=\ttfamily\scriptsize}
-\lstdefinestyle{groovy}{language=Groovy,basicstyle=\ttfamily\footnotesize}
-\lstdefinestyle{yaml}{language=YAML,basicstyle=\ttfamily\footnotesize}
-
-\newcommand{\groovy}{\lstset{style=Groovy}}
-\newcommand{\cpp}{\lstset{style=cpp}}
-\newcommand{\cppp}{\lstset{style=cppp}}
-\newcommand{\ansic}{\lstset{style=ansic}}
-\newcommand{\ansicp}{\lstset{style=ansicp}}
-\newcommand{\json}{\lstset{style=json}}
-\newcommand{\jsonp}{\lstset{style=jsonp}}
-\newcommand{\yaml}{\lstset{style=yaml}}
-\newcommand{\java}{\lstset{style=java}}
-\newcommand{\javap}{\lstset{style=javap}}
-\newcommand{\sql}{\lstset{style=sql}}
-\newcommand{\sqlp}{\lstset{style=sqlp}}
-\newcommand{\xml}{\lstset{style=xml}}
-\newcommand{\xmlp}{\lstset{style=xmlp}}
-\newcommand{\xsd}{\lstset{style=xsd}}
-\newcommand{\xsdp}{\lstset{style=xsdp}}
-\newcommand{\python}{\lstset{style=python}}
-\newcommand{\pythonp}{\lstset{style=pythonp}}
-\newcommand{\csh}{\lstset{style=shell}}
-\newcommand{\cshp}{\lstset{style=shellp}}
-\newcommand{\shell}{\lstset{style=shell}}
-\newcommand{\shellp}{\lstset{style=shellp}}
-
-
-
 \newcommand{\includecode}[2]{\lstinputlisting[caption=,escapechar={@*},style=#1]{#2}}
 
-%-----------------------------------------------------------------------------------%
+%-----------------------------------------------------------%

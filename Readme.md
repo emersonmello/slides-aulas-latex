@@ -1,28 +1,23 @@
 # Como organizar slides de aulas com LaTeX e git
 
-
-
 - Crie um subdiretório específico para cada aula. Esse diretório só terá o arquivo `.tex` e as figuras específicas para a aula em questão.
   - Quando fizer uma nova aula, use modelo o arquivo `.tex` de uma das aulas anteriores.
-- O diretório `0-ifscyan-modelo` contém os arquivos `.sty` do modelo LaTeX Beamer, além das figuras de rodapé e logo da instituição. Dessa forma, esses arquivos não serão replicados em cada uma das aulas.
+- O diretório [`0-ifscyan-modelo`](0-ifscyan-modelo) contém o arquivo `.sty` do modelo LaTeX Beamer, além da figura com o logo da instituição. Dessa forma, esses arquivos não serão replicados em cada uma das aulas.
 
 Abaixo é apresentada a estrutura proposta. No exemplo, tem-se duas aulas, cada qual em seu próprio diretório.
 
 ```
 .
-|-- 0-ifscyan-modelo
-|   |-- beamercolorthemeifscyan.sty
-|   |-- beamerthemeifscyan.sty
-|   `-- figs
-|       |-- ifsclogo.png
-|       `-- rodape.png
-|-- aula01
-|   |-- aula01.tex
-|   `-- figs
-|       `-- git-branch.png
-`-- aula02
-    |-- aula02.tex
-    `-- figs
+├── 0-ifscyan-modelo
+│   ├── beamerthemeifscyan.sty
+│   └── figs
+│       └── ifsclogo.pdf
+├── aula01
+│   ├── aula01.tex
+│   └── figs
+│       └── git-branch.png
+└── aula02
+    └── aula02.tex
 ```
 
 ## Fluxo de trabalho com o git
@@ -53,7 +48,7 @@ Da forma que fiz, ao salvar um documento, o VSC automaticamente irá compilar e 
     {
     	"Beamer frame":{
     		"prefix": "frame",
-    		"body": ["\\begin{frame}[wide]{$1}\n\\begin{itemize}\n\t\\item $2\n\\end{itemize}\n\\end{frame}"],
+    		"body": ["\\begin{frame}{$1}\n\\begin{itemize}\n\t\\item $2\n\\end{itemize}\n\\end{frame}"],
     		"description": "Frame para LaTeX Beamer"
     	},
     	"LaTeX itemize env":{
@@ -107,7 +102,7 @@ Da forma que fiz, ao salvar um documento, o VSC automaticamente irá compilar e 
 Esses `snippets` são atalhos para gerar comandos em LaTeX. Por exemplo, sempre que eu preciso criar um novo slide eu só digito `frame` e no popup que aparece eu escolho o `frame` e pressiono ENTER. Dessa forma o Visual Studio Code gera o seguinte bloco:
 
 ```latex
-\begin{frame}[wide]{}
+\begin{frame}{}
 \begin{itemize}
     \item 
 \end{itemize}
@@ -120,78 +115,155 @@ Esses `snippets` são atalhos para gerar comandos em LaTeX. Por exemplo, sempre 
 
 - Adicione o seguinte trecho dentro do bloco já existente (o bloco é delimitado por { e })
 
-  - ```json
-    "latex-workshop.view.pdf.zoom": "page-width",
-        "latex-workshop.view.pdf.viewer": "tab",
-        "files.exclude": {
-            "*.bbl": true,
-            "*.nav": true,
-            "*.snm": true,
-            "*.aux": true,
-            "*.fls": true,
-            "*.blg": true,
-            "*.idx": true,
-            "*.ind": true,
-            "*.lof": true,
-            "*.lot": true,
-            "*.out": true,
-            "*.acn": true,
-            "*.acr": true,
-            "*.alg": true,
-            "*.glg": true,
-            "*.glo": true,
-            "*.gls": true,
-            "*.ist": true,
-            "*.log": true,
-            "*.fdb_latexmk": true,
-            "*.synctex*": true,
-            "*.toc": true,
-            "*.vrb": true
-    }, 
-    "latex-workshop.latex.outputDir": "./outlatexdir",
-    "latex-workshop.latex.recipes": [
-        {
-            "name": "latexmk",
-            "tools": [
-                "latexmk"
-            ]
-        }
+```json
+"files.exclude": {
+  "**/.classpath": true,
+  "**/.project": true,
+  "**/.settings": true,
+  "**/.factorypath": true,
+  "**/*.bbl": true,
+  "**/*.nav": true,
+  "**/*.snm": true,
+  "**/*.aux": true,
+  "**/*.fls": true,
+  "**/*.blg": true,
+  "**/*.idx": true,
+  "**/*.ind": true,
+  "**/*.lof": true,
+  "**/*.lot": true,
+  "**/*.lol": true,
+  "**/*.out": true,
+  "**/*.acn": true,
+  "**/*.acr": true,
+  "**/*.alg": true,
+  "**/*.glg": true,
+  "**/*.glo": true,
+  "**/*.gls": true,
+  "**/*.ist": true,
+  "**/*.log": true,
+  "**/*.fdb_latexmk": true,
+  "**/*.synctex*": true,
+  "**/*.run.xml": true,
+  "**/*.toc": true,
+  "**/*.vrb": true
+},
+"latex-workshop.view.pdf.viewer": "tab",
+"latex-workshop.bibtex-format.sort.enabled": true,
+"latex-workshop.bind.enter.key": false,
+"latex-workshop.intellisense.file.exclude": [
+  "**/*.aux",
+  "**/*.bbl",
+  "**/*.bcf",
+  "**/*.blg",
+  "**/*.idx",
+  "**/*.ind",
+  "**/*.lof",
+  "**/*.lot",
+  "**/*.out",
+  "**/*.toc",
+  "**/*.acn",
+  "**/*.acr",
+  "**/*.alg",
+  "**/*.glg",
+  "**/*.glo",
+  "**/*.gls",
+  "**/*.ist",
+  "**/*.fls",
+  "**/*.log",
+  "**/*.nav",
+  "**/*.snm",
+  "**/*.fdb_latexmk",
+  "**/*.synctex.gz",
+  "**/*.run.xml",
+  "**/*.lol",
+  "**/*.alg",
+  "**/*.glstex",
+  "**/*.vrb"
+],
+"latex-workshop.view.pdf.zoom": "page-width",
+"latex-workshop.latex.clean.subfolder.enabled": true,
+"latex-workshop.latex.outDir": "%DIR%/outlatexdir",
+"latex-workshop.synctex.afterBuild.enabled": true,
+"latex-workshop.latex.recipes": [
+  {
+    "name": "latexmk 🔃",
+    "tools": [
+      "latexmk"
+    ]
+  },
+  {
+    "name": "pdflatex ➞ bibtex ➞ pdflatex × 2",
+    "tools": [
+      "pdflatex",
+      "bibtex",
+      "pdflatex",
+      "pdflatex"
+    ]
+  }
+],
+"latex-workshop.latex.tools": [
+  {
+    "name": "latexmk",
+    "command": "latexmk",
+    "args": [
+      "-pdf",
+      "-synctex=1",
+      "-interaction=nonstopmode",
+      "-file-line-error",
+      "-aux-directory=%OUTDIR%",
+      "-outdir=%OUTDIR%",
+      "%DOC%"
     ],
-    "latex-workshop.latex.tools": [
-        {
-            "name": "latexmk",
-            "command": "latexmk",
-            "args": [
-                "-synctex=1",
-                "-interaction=nonstopmode",
-                "-file-line-error",
-                "-pdf",
-                "-aux-directory=outlatexdir",
-                "-output-directory=outlatexdir",
-                "%DOC%"
-            ]
-        },
-        {
-            "name": "pdflatex",
-            "command": "pdflatex",
-            "args": [
-                "-synctex=1",
-                "-interaction=nonstopmode",
-                "-file-line-error",
-                "-aux-directory=outlatexdir",
-                "-output-directory=outlatexdir",
-                "%DOC%"
-            ]
-        }
+    "env": {}
+  },
+  {
+    "name": "latexmk-clean",
+    "command": "latexmk",
+    "args": [
+      "-bibtex",
+      "-c",
+      "-outdir=%OUTDIR%",
+      "%DOC%"
+    ]
+  },
+  {
+    "name": "pdflatex",
+    "command": "pdflatex",
+    "args": [
+      "-synctex=1",
+      "-interaction=nonstopmode",
+      "-file-line-error",
+      "-output-directory=%OUTDIR%",
+      "%DOC%"
+    ]
+  },
+  {
+    "name": "biber",
+    "command": "biber",
+    "args": [
+      "--input-directory=%OUTDIR%",
+      "--output-directory=%OUTDIR%",
+      "%DOCFILE%"
+    ]
+  },
+  {
+    "name": "bibtex",
+    "command": "bibtex",
+    "args": [
+      "%OUTDIR%/%DOCFILE%"
     ],
-    "latex-workshop.message.update.show": false,
-    "latex-workshop.chktex.enabled": true,
-    "latex-workshop.latex.autoClean.run": "onFailed",
-    "latex-workshop.synctex.synctexjs.enabled": false,
-    "latex-workshop.intellisense.package.enabled": true,
-    "latex-workshop.latex.clean.subfolder.enabled": true,
-    "latex-workshop.bind.enter.key": false
-    ```
+    "env": {}
+  },
+  {
+    "name": "makeglossaries",
+    "command": "makeglossaries",
+    "args": [
+      "-d%OUTDIR%",
+      "%DOCFILE%"
+    ]
+  }
+],
+  ```
 
   
 
@@ -232,3 +304,15 @@ Abaixo criei teclas de atalho para os comandos que deixam o texto em **negrito**
 }
 ]
 ```
+
+## Proporção 16x9 (widescreen)
+
+![Prova](screenshots/wide.png)
+## Outras cores
+
+![amarelo](screenshots/amarelo.png)
+![azul](screenshots/azul.png)
+![bordo](screenshots/bordo.png)
+![cinza](screenshots/cinza.png)
+![marrom](screenshots/marrom.png)
+![roxo](screenshots/roxo.png)
