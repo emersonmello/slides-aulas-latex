@@ -44,60 +44,60 @@ Da forma que fiz, ao salvar um documento, o VSC automaticamente irá compilar e 
 
 - Abra o Visual Studio Code, vá em *Preferences* -> *User snippets* e edite o arquivo `latex.json`. Coloque o seguinte conteúdo dentro:
 
-  - ```json
-    {
-    	"Beamer frame":{
-    		"prefix": "frame",
-    		"body": ["\\begin{frame}{$1}\n\\begin{itemize}\n\t\\item $2\n\\end{itemize}\n\\end{frame}"],
-    		"description": "Frame para LaTeX Beamer"
-    	},
-    	"LaTeX itemize env":{
-    		"prefix": "itemize",
-    		"body": ["\\begin{itemize}\n\t\\item $1\n\\end{itemize}"],
-    		"description": "itemize env para LaTeX"
-    	},
-    	"Beamer block":{
-    		"prefix": "block",
-    		"body": ["\\begin{block}{}\n\t $1\n\\end{block}"],
-    		"description": "Block para LaTeX Beamer"
-    	},
-    	"LaTeX column env":{
-    		"prefix": "columns",
-    		"body": ["\\begin{columns}\n\t\\column{.5\\linewidth}\n\t $1\n\t\\column{.5\\linewidth}\n\t $2 \n\\end{columns} "],
-    		"description": "columns env para LaTeX"
-        },
-        "LaTeX figure env":{
-    		"prefix": "figure",
-    		"body": ["\\begin{figure}[ht]\n\t\\centering\n\t\\includegraphics[width=${2:\\linewidth}]{figs/$1}\n\t\\caption{}\n\t\\label{fig:}\n\\end{figure}"],
-    		"description": "LaTeX figure env"
-        },
-        "LaTeX includegraphics beamer":{
-    		"prefix": "includegraphics",
-    		"body": ["\\begin{center}\n\t\\includegraphics[width=${2:\\linewidth}]{figs/$1}\n\\end{center}"],
-    		"description": "LaTeX includegraphics"
-        },
-        "LaTeX beamer only":{
-    		"prefix": "only",
-    		"body": ["\\only<${1|1,2,3,4,5,6|}>{\n\t${2}\n}"],
-    		"description": "LaTeX beamer only"
-        },
-        "Beamer only env":{
-    		"prefix": "onlyenv",
-    		"body": ["\\begin{onlyenv}<${1|1,2,3,4,5,6|}>\n\t $2\n\\end{onlyenv}"],
-    		"description": "Only env para LaTeX Beamer"
-        },
-        "Latex includecode listing":{
-    		"prefix": "includecode",
-    		"body": ["\\includecode{java}{codes/$1}"],
-    		"description": "comand para lstinputlisting LaTeX"
-    	},
-        "Lstlisting":{
-    		"prefix": "lstlisting",
-    		"body": ["\\begin{lstlisting}\n${1}\n\\end{lstlisting}"],
-    		"description": "lstlisting para LaTeX"
-        }
-    }
-    ```
+```json
+{
+"Beamer frame":{
+"prefix": "frame",
+"body": ["\\begin{frame}{$1}\n\\begin{itemize}\n\t\\item $0\n\\end{itemize}\n\\end{frame}"],
+"description": "Frame para LaTeX Beamer"
+},
+"LaTeX itemize env":{
+"prefix": "itemize",
+"body": ["\\begin{itemize}\n\t\\item $0\n\\end{itemize}"],
+"description": "itemize env para LaTeX"
+},
+"Beamer block":{
+"prefix": "block",
+"body": ["\\begin{block}{$1}\n\t $0\n\\end{block}"],
+"description": "Block para LaTeX Beamer"
+},
+"LaTeX column env":{
+"prefix": "columns",
+"body": ["\\begin{columns}\n\t\\column{.5\\linewidth}\n\t $0\n\t\\column{.5\\linewidth}\n\t \n\\end{columns} "],
+"description": "columns env para LaTeX"
+},
+"LaTeX figure env":{
+"prefix": "figure",
+"body": ["\\begin{figure}[ht]\n\t\\centering\n\t\\includegraphics[width=\\linewidth]{$1}\n\t\\caption{$2}\n\t\\label{fig:$0}\n\\end{figure}"],
+"description": "LaTeX figure env"
+},
+"LaTeX includegraphics beamer":{
+"prefix": "includegraphics",
+"body": ["\\begin{center}\n\t\\includegraphics[width=\\linewidth]{figs/$0}\n\\end{center}"],
+"description": "LaTeX includegraphics"
+},
+"LaTeX beamer only":{
+"prefix": "only",
+"body": ["\\only<${1|1,2,3,4,5,6|}>{\n\t$0\n}"],
+"description": "LaTeX beamer only"
+},
+"Beamer only env":{
+"prefix": "onlyenv",
+"body": ["\\begin{onlyenv}<${1|1,2,3,4,5,6|}>\n\t $0\n\\end{onlyenv}"],
+"description": "Only env para LaTeX Beamer"
+},
+"Latex includecode listing":{
+"prefix": "includecode",
+"body": ["\\includecode{java}{codes/$0}"],
+"description": "comand para lstinputlisting LaTeX"
+},
+"Lstlisting":{
+"prefix": "lstlisting",
+"body": ["\\begin{lstlisting}[language=$1]\n$0\n\\end{lstlisting}"],
+"description": "lstlisting para LaTeX"
+}
+}
+```
 
 Esses `snippets` são atalhos para gerar comandos em LaTeX. Por exemplo, sempre que eu preciso criar um novo slide eu só digito `frame` e no popup que aparece eu escolho o `frame` e pressiono ENTER. Dessa forma o Visual Studio Code gera o seguinte bloco:
 
